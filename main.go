@@ -4,7 +4,6 @@ import(
 	"github.com/Pornpan9/finalexam/customer"
 	"github.com/Pornpan9/finalexam/database"
 	"github.com/gin-gonic/gin"
-	"fmt"
 	"net/http"
 )
 
@@ -16,9 +15,7 @@ func main()  {
 }
 
 func authMiddleware(c *gin.Context){
-	fmt.Println("Hello")
 	token := c.GetHeader("Authorization")
-	fmt.Println("token:", token)
 
 	if token != "token2019"{
 		c.JSON(http.StatusUnauthorized, gin.H{"error": http.StatusText(http.StatusUnauthorized)})
@@ -27,7 +24,6 @@ func authMiddleware(c *gin.Context){
 	}
 
 	c.Next()
-	fmt.Println("Goodbye!!!!")
 }
 
 func setupRouter() *gin.Engine {
@@ -36,12 +32,11 @@ func setupRouter() *gin.Engine {
 
 	r.Use(authMiddleware)
 
-	api := r.Group("/")
-	api.GET("/customers", customer.GetHandler)
-	api.POST("/customers", customer.CreateHandler)
-	api.PUT("/customers/:id", customer.UpdateHandler)
-	api.DELETE("/customers/:id", customer.DeleteHandler)
-	api.GET("/customers/:id", customer.GetByIDHandler)	
+	r.GET("/customers", customer.GetHandler)
+	r.POST("/customers", customer.CreateHandler)
+	r.PUT("/customers/:id", customer.UpdateHandler)
+	r.DELETE("/customers/:id", customer.DeleteHandler)
+	r.GET("/customers/:id", customer.GetByIDHandler)	
 
 	return r
 }
